@@ -1,26 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component, Fragment} from 'react';
+import ToDoContainer from "./containers/ToDoContainer";
+import './css/app.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+    id = 2;
+    state = {
+        todos: [
+            {id: 0, title: '빨래하기'},
+            {id: 1, title: '청소하기'},
+        ],
+    };
+
+    handleCreate = (data) => {
+        const {todos} = this.state;
+        this.setState({
+            todos: todos.concat({
+                id: this.id++,
+                ...data,
+            }),
+        });
+    };
+    handleDelete = (id) => {
+        const {todos} = this.state;
+        this.setState({
+            todos: todos.filter(item => item.id !== id),
+        });
+    };
+    handleSubmit = (e) => {
+        e.preventDefault();
+
+        const input = document.getElementById("add-item");
+
+        this.handleCreate({title: input.value});
+        input.value = '';
+    };
+
+    render() {
+        const {todos} = this.state;
+        const {handleSubmit, handleDelete} = this;
+
+        return(
+            <Fragment>
+                <ToDoContainer onDelete={handleDelete} onSubmit={handleSubmit} todos={todos} />
+            </Fragment>
+        );
+    }
+
 }
 
 export default App;
